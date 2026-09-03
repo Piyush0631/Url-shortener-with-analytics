@@ -1,0 +1,42 @@
+{
+  "name": "urlshortener",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A URL shortener with click analytics.",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/server.js",
+    "dev": "tsx watch src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Piyush0631/Url-shortener-with-analytics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Piyush0631/Url-shortener-with-analytics/issues"
+  },
+  "homepage": "https://github.com/Piyush0631/Url-shortener-with-analytics#readme",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "ioredis": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "nodemon": "^3.1.14",
+    "prisma": "^7.10.0",
+    "tsx": "^4.23.13"
+  }
+}

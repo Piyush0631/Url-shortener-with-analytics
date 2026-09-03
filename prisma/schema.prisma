@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now())
+  refreshTokens RefreshToken[]
+  urls          Url[]
+}
+
+model Url {
+  id        Int      @id @default(autoincrement())
+  shortCode String   @unique
+  longUrl   String
+  ownerId   Int
+  createdAt DateTime @default(now())
+  clicks    Int      @default(0)
+
+  analytics Analytics[]
+  owner     User        @relation(fields: [ownerId], references: [id])
+
+  @@index([ownerId])
+  @@index([createdAt])
+}
+
+model Analytics {
+  id        Int      @id @default(autoincrement())
+  shortCode String
+  timestamp DateTime @default(now())
+  country   String?
+  city      String?
+  device    String?
+  browser   String?
+  referrer  String?
+  userAgent String?
+
+  url Url @relation(fields: [shortCode], references: [shortCode])
+
+  @@index([shortCode])
+  @@index([timestamp])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  tokenHash String   @unique
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
