@@ -20,3 +20,10 @@ export function setTokenCookie(res, refreshToken) {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
+
+export function hashRefreshToken(rawToken) {
+  return crypto
+    .createHmac("sha256", process.env.REFRESH_TOKEN_SECRET)
+    .update(rawToken)
+    .digest("hex");
+}

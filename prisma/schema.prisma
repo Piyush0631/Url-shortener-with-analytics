@@ -59,6 +59,7 @@ model Analytics {
 model RefreshToken {
   id        Int      @id @default(autoincrement())
   userId    Int
+  familyId  String
   tokenHash String   @unique
   expiresAt DateTime
   revoked   Boolean  @default(false)
