@@ -45,6 +45,7 @@ model Analytics {
   timestamp DateTime @default(now())
   country   String?
   city      String?
+  zip       String?
   device    String?
   browser   String?
   referrer  String?
