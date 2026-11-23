@@ -1,6 +1,7 @@
 import prisma from "../../config/db.js";
 import AppError from "../../utils/appError.js";
 import encodeBase62 from "../../utils/encodeBase62.js";
+import redisClient from "../../config/redis.js";
 
 const createShortUrl = async (longUrl, ownerId) => {
   const OFFSET = 916132832 + 2176782336;
@@ -43,6 +44,7 @@ const deleteLinkByShortCode = async (shortCode, ownerId) => {
   await prisma.url.delete({
     where: { shortCode, ownerId },
   });
+  await redisClient.del(`url:${shortCode}`);
 };
 export default {
   createShortUrl,

@@ -1,6 +1,7 @@
 import prisma from "../../config/db.js";
 import getLocation from "../../utils/ipGeolocation.js";
 import AppError from "../../utils/appError.js";
+import redisClient from "../../config/redis.js";
 
 const redirectService = async ({
   shortCode,
@@ -10,12 +11,18 @@ const redirectService = async ({
   userAgent,
   referrer,
 }) => {
-  const url = await prisma.url.findUnique({
-    where: { shortCode },
-  });
+  const cacheKey = `url:${shortCode}`;
+  let longUrl = await redisClient.get(cacheKey);
+  if (!longUrl) {
+    const url = await prisma.url.findUnique({
+      where: { shortCode },
+    });
 
-  if (!url) {
-    throw new AppError("URL not found", 404);
+    if (!url) {
+      throw new AppError("URL not found", 404);
+    }
+    longUrl = url.longUrl;
+    await redisClient.set(cacheKey, longUrl, "EX", 3600);
   }
   let location = null;
   try {
@@ -49,7 +56,7 @@ const redirectService = async ({
     throw new AppError(`Click tracking failed: ${err.message}`, 500);
   }
 
-  return url.longUrl;
+  return longUrl;
 };
 
 export default redirectService;
